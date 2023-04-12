@@ -1,9 +1,9 @@
 /**
  * An internal helper that provides the metadata for a mocked function to the mock
- * @param name - the name of the function that will be called
- * @property args - the arguments that the function will be called with
- * @property returnValue - the value the function will return. This will only return if the function doesn't throw an error.
- * @property error - an error to throw. If this is set then the function will not return a value
+ * @param name: the name of the function that will be called
+ * @property args: the arguments that the function will be called with
+ * @property returnValue: the value the function will return. This will only return if the function doesn't throw an error.
+ * @property error: an error to throw. If this is set then the function will not return a value
  */
 function MockFunction_(name) {
   this.name = name;
@@ -13,7 +13,21 @@ function MockFunction_(name) {
 }
 
 /**
- * This is the Mock that mocks out a dependency. You can chain the calls 
+ * This is the Mock that mocks out a dependency. You can chain the function expectation calls to allow for very readable code in tests.
+ * The generated mock object has both explicit and implicit expectations
+ * Explicit:
+ *  - Functions will be called with the names that have been provided for the mock. Unmocked functions will not exist and so cause an error
+ *  - Functions when called will have their parameters compared against any provided parameters for the mocked function
+ * Implicit
+ *  - Functions will be called in the sequence they are specified in. If not an error will be thrown.
+ *  - It can be checked that all mocked functions have been invoked by calling the validate() function on the generated mock object.
+ * 
+ * @function expects(name): sets the name of the function to expect and implicitly creates a new MockFunction_ to configure under the hood
+ * @function withArgs(...args): sets the arguments the mocked functiuon should expect
+ * @function willReturn(returnValue): sets the value that the mocked function will return. Ignored if an error is to be thrown instead.
+ * @function willThrow(error): sets the error that will be thrown when the function is called. Any return value will be ignored.
+ * @function build(): builds the mockedObject with the mock functions attached.
+ * @function validate(): validates the mockedObject has been completely used up.
  */
 class Mock {
   constructor() {

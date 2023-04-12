@@ -1,6 +1,6 @@
 
 /**
- * Test Unit Test Support functions
+ * Run all the tests for the Test library
  */
 function runTests() {
   suite = getSuiteIsEqual_()
@@ -231,12 +231,8 @@ function testMockExpects_() {
 
 function testMockMultipleExpects_() {
   let mock = new Mock();
-  mock.expects("doThing")
-    .withArgs("one")
-    .willReturn(true);
-  mock.expects("doThing")
-    .withArgs("two")
-    .willReturn(false);
+  mock.expects("doThing").withArgs("one").willReturn(true);
+  mock.expects("doThing").withArgs("two").willReturn(false);
 
   let mockedObject = mock.build();
   isTrue(mockedObject.doThing("one"));
@@ -253,9 +249,7 @@ function testMockMultipleExpects_() {
 
 function testMockWithArgs_() {
   let mock = new Mock();
-  mock.expects("doThing")
-    .withArgs("one", "two")
-    .willReturn(true);
+  mock.expects("doThing").withArgs("one", "two").willReturn(true);
 
   let mockedObject = mock.build();
   isTrue(mockedObject.doThing("one", "two"));
@@ -269,9 +263,7 @@ function testMockWithArgs_() {
 
 function testMockWithOneArg_() {
   let mock = new Mock();
-  mock.expects("doThing")
-    .withArgs("one")
-    .willReturn(true);
+  mock.expects("doThing").withArgs("one").willReturn(true);
 
   let mockedObject = mock.build();
   isTrue(mockedObject.doThing("one"));
@@ -285,8 +277,7 @@ function testMockWithOneArg_() {
 
 function testMockWithNoArgs_() {
   let mock = new Mock();
-  mock.expects("doThing")
-    .willReturn(true);
+  mock.expects("doThing").willReturn(true);
 
   let mockedObject = mock.build();
   isTrue(mockedObject.doThing());
@@ -311,8 +302,7 @@ function testMockWillReturn_() {
 
 function testMockWillThrow_() {
   let mock = new Mock();
-  mock.expects("doThing")
-    .willThrow(new Error("It failed"));
+  mock.expects("doThing").willThrow(new Error("It failed"));
 
   let mockedObject = mock.build();
   willFail(() => {mockedObject.doThing()}, "It failed");
