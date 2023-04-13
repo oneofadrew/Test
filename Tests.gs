@@ -3,7 +3,8 @@
  * Run all the tests for the Test library
  */
 function runTests_() {
-  suite = getSuiteIsEqual_()
+  suite = newTestSuite("All Tests")
+    .addSuite(getSuiteIsEqual_())
     .addSuite(getSuiteIsTrue_())
     .addSuite(getSuiteIsFalse_())
     .addSuite(getSuiteIsTruthy_())
@@ -212,43 +213,43 @@ function getSuiteMock_() {
 }
 
 function testMockExpects_() {
-  let mock = new Mock();
+  let mock = newMock();
   mock.expects("foo");
   mock.expects("bar");
 
   let mockedObject = mock.build();
   isFalsy(mockedObject.foo());
   isFalsy(mockedObject.bar());
-  mockedObject.validate();
+  mockedObject.verify();
 
   mockedObject = mock.build();
   isFalsy(mockedObject.foo());
-  willFail(() => {mockedObject.validate()});
+  willFail(() => {mockedObject.verify()});
 
   mockedObject = mock.build();
   willFail(() => {mockedObject.bar()});
 }
 
 function testMockMultipleExpects_() {
-  let mock = new Mock();
+  let mock = newMock();
   mock.expects("doThing").withArgs("one").willReturn(true);
   mock.expects("doThing").withArgs("two").willReturn(false);
 
   let mockedObject = mock.build();
   isTrue(mockedObject.doThing("one"));
   isFalse(mockedObject.doThing("two"));
-  mockedObject.validate();
+  mockedObject.verify();
 
   mockedObject = mock.build();
   isTrue(mockedObject.doThing("one"));
-  willFail(() => {mockedObject.validate()});
+  willFail(() => {mockedObject.verify()});
 
   mockedObject = mock.build();
   willFail(() => {mockedObject.doThing("two")});
 }
 
 function testMockWithArgs_() {
-  let mock = new Mock();
+  let mock = newMock();
   mock.expects("doThing").withArgs("one", "two").willReturn(true);
 
   let mockedObject = mock.build();
@@ -262,7 +263,7 @@ function testMockWithArgs_() {
 }
 
 function testMockWithOneArg_() {
-  let mock = new Mock();
+  let mock = newMock();
   mock.expects("doThing").withArgs("one").willReturn(true);
 
   let mockedObject = mock.build();
@@ -276,7 +277,7 @@ function testMockWithOneArg_() {
 }
 
 function testMockWithNoArgs_() {
-  let mock = new Mock();
+  let mock = newMock();
   mock.expects("doThing").willReturn(true);
 
   let mockedObject = mock.build();
@@ -291,17 +292,17 @@ function testMockWithNoArgs_() {
 
 function testMockWillReturn_() {
   let values = [true, false, 100, 100.001, {}, [0,1,2], null, "string", ""];
-  let mock = new Mock();
+  let mock = newMock();
   for (i in values) mock.expects("doThing").willReturn(values[i]);
 
 
-  mock = new Mock().expects("doThing");
+  mock = newMock().expects("doThing");
   mockedObject = mock.build();
   isEqual(mockedObject.doThing(), undefined);
 }
 
 function testMockWillThrow_() {
-  let mock = new Mock();
+  let mock = newMock();
   mock.expects("doThing").willThrow(new Error("It failed"));
 
   let mockedObject = mock.build();

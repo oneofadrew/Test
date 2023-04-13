@@ -79,15 +79,17 @@ function TestSuite_(id) {
   this.tearDown;
   this.addTest = (test) => {
     this.tests[this.tests.length] = test;
+    return this;
   }
   this.addSetUp = (setUp) => {
     this.setUp = setUp;
+    return this;
   }
   this.addTearDown = (tearDown) => {
     this.tearDown = tearDown;
+    return this;
   }
   this.run = () => {
-    for (i in this.suites) this.suites[i].run();
     console.log("-".repeat(this.suiteId.length+6));
     console.log(`Suite ${this.suiteId}`)
     for (i in this.tests) {
@@ -96,6 +98,7 @@ function TestSuite_(id) {
       this.tests[i]();
       this.tearDown ? this.tearDown() : null;
     }
+    for (i in this.suites) this.suites[i].run();
   }
   this.addSuite = (suite) => {
     this.suites[this.suites.length] = suite;

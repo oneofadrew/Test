@@ -20,14 +20,14 @@ function MockFunction_(name) {
  *  - Functions when called will have their parameters compared against any provided parameters for the mocked function
  * Implicit
  *  - Functions will be called in the sequence they are specified in. If not an error will be thrown.
- *  - It can be checked that all mocked functions have been invoked by calling the validate() function on the generated mock object.
+ *  - It can be checked that all mocked functions have been invoked by calling the verify() function on the generated mock object.
  * 
  * @function expects(name): sets the name of the function to expect and implicitly creates a new MockFunction_ to configure under the hood
  * @function withArgs(...args): sets the arguments the mocked functiuon should expect
  * @function willReturn(returnValue): sets the value that the mocked function will return. Ignored if an error is to be thrown instead.
  * @function willThrow(error): sets the error that will be thrown when the function is called. Any return value will be ignored.
  * @function build(): builds the mockedObject with the mock functions attached.
- * @function validate(): validates the mockedObject has been completely used up.
+ * @function verify(): verifies the mockedObject has been completely used up.
  */
 class Mock {
   constructor() {
@@ -57,7 +57,7 @@ class Mock {
   build() {
     //create our mocked target
     let target = {
-      validate : () => {
+      verify : () => {
         isEqual(target.callSequence, this.functions.length, `Expected ${this.functions.length} function calls but only received ${target.callSequence}`);
       }
     };
@@ -130,3 +130,7 @@ class Mock {
     return target;
   }
 };
+
+function newMock() {
+  return new Mock();
+}
