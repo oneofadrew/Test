@@ -2,7 +2,7 @@
 /**
  * Run all the tests for the Test library
  */
-function runTests() {
+function runTests_() {
   suite = getSuiteIsEqual_()
     .addSuite(getSuiteIsTrue_())
     .addSuite(getSuiteIsFalse_())
