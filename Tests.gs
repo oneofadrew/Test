@@ -1,4 +1,3 @@
-
 /**
  * Run all the tests for the Test library
  */
@@ -10,14 +9,15 @@ function runTests_() {
     .addSuite(getSuiteIsTruthy_())
     .addSuite(getSuiteIsFalsy_())
     .addSuite(getSuiteWillFail_())
-    .addSuite(getSuiteMock_());
+    .addSuite(getSuiteMock_())
+    .addSuite(getSuiteValidators_());
   suite.run();
 }
 
 function getSuiteIsEqual_() {
-  let suite = newTestSuite("isEqual()");
-  suite.addTest(testIsEqualHappyPath_);
-  suite.addTest(testIsEqualUnhappyPath_);
+  let suite = newTestSuite("isEqual()")
+    .addTest(testIsEqualHappyPath_)
+    .addTest(testIsEqualUnhappyPath_);
   return suite;
 }
 
@@ -89,9 +89,9 @@ function testIsEqualUnhappyPath_() {
 }
 
 function getSuiteIsTrue_() {
-  let suite = newTestSuite("isTrue()");
-  suite.addTest(testIsTrueHappyPath_);
-  suite.addTest(testIsTrueUnhappyPath_);
+  let suite = newTestSuite("isTrue()")
+    .addTest(testIsTrueHappyPath_)
+    .addTest(testIsTrueUnhappyPath_);
   return suite;
 }
 
@@ -109,9 +109,9 @@ function testIsTrueUnhappyPath_() {
 }
 
 function getSuiteIsFalse_() {
-  let suite = newTestSuite("isFalse()");
-  suite.addTest(testIsFalseHappyPath_);
-  suite.addTest(testIsFalseUnhappyPath_);
+  let suite = newTestSuite("isFalse()")
+    .addTest(testIsFalseHappyPath_)
+    .addTest(testIsFalseUnhappyPath_);
   return suite;
 }
 
@@ -129,9 +129,9 @@ function testIsFalseUnhappyPath_() {
 }
 
 function getSuiteIsTruthy_() {
-  let suite = newTestSuite("isTruthy()");
-  suite.addTest(testIsTruthyHappyPath_);
-  suite.addTest(testIsTruthyUnhappyPath_);
+  let suite = newTestSuite("isTruthy()")
+    .addTest(testIsTruthyHappyPath_)
+    .addTest(testIsTruthyUnhappyPath_);
   return suite;
 }
 
@@ -148,9 +148,9 @@ function testIsTruthyUnhappyPath_() {
 }
 
 function getSuiteIsFalsy_() {
-  let suite = newTestSuite("isFalsy()");
-  suite.addTest(testIsFalsyHappyPath_);
-  suite.addTest(testIsFalsyUnhappyPath_);
+  let suite = newTestSuite("isFalsy()")
+    .addTest(testIsFalsyHappyPath_)
+    .addTest(testIsFalsyUnhappyPath_);
   return suite;
 }
 
@@ -167,9 +167,9 @@ function testIsFalsyUnhappyPath_() {
 }
 
 function getSuiteWillFail_() {
-  let suite = newTestSuite("willFail()");
-  suite.addTest(testWillFailHappyPath_);
-  suite.addTest(testWillFailUnhappyPath_);
+  let suite = newTestSuite("willFail()")
+    .addTest(testWillFailHappyPath_)
+    .addTest(testWillFailUnhappyPath_);
   return suite;
 }
 
@@ -201,14 +201,14 @@ function testWillFailUnhappyPath_() {
 }
 
 function getSuiteMock_() {
-  let suite = newTestSuite("Mock");
-  suite.addTest(testMockExpects_);
-  suite.addTest(testMockMultipleExpects_);
-  suite.addTest(testMockWithArgs_);
-  suite.addTest(testMockWithOneArg_);
-  suite.addTest(testMockWithNoArgs_);
-  suite.addTest(testMockWillReturn_);
-  suite.addTest(testMockWillThrow_);
+  let suite = newTestSuite("Mock")
+    .addTest(testMockExpects_)
+    .addTest(testMockMultipleExpects_)
+    .addTest(testMockWithArgs_)
+    .addTest(testMockWithOneArg_)
+    .addTest(testMockWithNoArgs_)
+    .addTest(testMockWillReturn_)
+    .addTest(testMockWillThrow_);
   return suite;
 }
 
@@ -307,4 +307,75 @@ function testMockWillThrow_() {
 
   let mockedObject = mock.build();
   willFail(() => {mockedObject.doThing()}, "It failed");
+}
+
+function getSuiteValidators_() {
+  let suite = newTestSuite("Validators")
+    .addTest(testArgsIsEq_)
+    .addTest(testArgsAny_)
+    .addTest(testArgsIgnore_);
+  return suite;
+}
+
+function testArgsIsEq_() {
+  let mock = newMock();
+  mock.expects("doThing").withArgs(Args.isEq("one"), Args.isEq("two")).willReturn(true);
+
+  let mockedObject = mock.build();
+  isTrue(mockedObject.doThing("one", "two"));
+  
+  mockedObject = mock.build();
+  willFail(() => {mockedObject.doThing("one")});
+  
+  mockedObject = mock.build();
+  willFail(() => {mockedObject.doThing()});
+}
+
+function testArgsAny_() {
+  let mock = newMock();
+  mock.expects("doThing").withArgs(Args.ANY, "two").willReturn(true);
+  let mockedObject = mock.build();
+  isTrue(mockedObject.doThing("one", "two"));
+  mockedObject = mock.build();
+  isTrue(mockedObject.doThing("blue", "two"));
+  mockedObject = mock.build();
+  isTrue(mockedObject.doThing(null, "two"));
+  mockedObject = mock.build();
+  isTrue(mockedObject.doThing(1, "two"));
+  mockedObject = mock.build();
+  isTrue(mockedObject.doThing({"key":"value"}, "two"));
+  mockedObject = mock.build();
+  willFail(() => {mockedObject.doThing("one", 2)}); //second function must be equal
+
+  mock = newMock();
+  mock.expects("doThing").withArgs(Args.ANY, Args.ANY).willReturn(true);
+  mockedObject = mock.build();
+  isTrue(mockedObject.doThing("one", "two"));
+  mockedObject = mock.build();
+  isTrue(mockedObject.doThing("blue", "pink"));
+  mockedObject = mock.build();
+  isTrue(mockedObject.doThing(null, []));
+  mockedObject = mock.build();
+  isTrue(mockedObject.doThing(1, 2));
+  mockedObject = mock.build();
+  isTrue(mockedObject.doThing({"key":"value"}, {"foo":"bar"}));
+  mockedObject = mock.build();
+  willFail(() => {mockedObject.doThing(1, 2, 3)}); //too many arguments
+  mockedObject = mock.build();
+  isTrue(mockedObject.doThing(1,2));
+  willFail(() => {mockedObject.doThing(1, 2)}); //too many calls
+}
+
+function testArgsIgnore_() {
+  let mock = newMock();
+  mock.expects("doThing").withArgs(Args.IGNORE).willReturn(true);
+  let mockedObject = mock.build();
+  isTrue(mockedObject.doThing());
+  mockedObject = mock.build();
+  isTrue(mockedObject.doThing(1));
+  mockedObject = mock.build();
+  isTrue(mockedObject.doThing(1, 2));
+  mockedObject = mock.build();
+  isTrue(mockedObject.doThing(1, 2, 3));
+  willFail(() => {mockedObject.doThing(1, 2, 3)}); //too many calls
 }
