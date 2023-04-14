@@ -89,13 +89,15 @@ class Mock {
           //valid
         } else if (functionMeta.args && functionMeta.args.length > 0 && functionMeta.args[0] === Args.IGNORE) {
           //igore
-        } else if ((args && functionMeta.args == undefined) || (args && functionMeta.args == undefined)) {
+        } else if ((args && functionMeta.args == undefined) || (args == undefined && functionMeta.args)) {
           throw new Error(`Expected function ${functionMeta.name} to be called with ${JSON.stringify(functionMeta.args)} but was called with ${JSON.stringify(args)}`);
         } else {
           //validate the arguments according to the specified validators
           for (i in args) functionMeta.args[i].val(args[i], functionMeta.name);
+          //check to make sure all of the arguments were provided as expected
           isEqual(args.length, functionMeta.args.length, `Expected function ${functionMeta.name} to have arguments ${functionMeta.args.length} but was called with ${JSON.stringify(args)}`);
         }
+        //increment the call sequence
         target["callSequence"]++;
         if (functionMeta.error) {
           throw functionMeta.error;
