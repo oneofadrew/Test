@@ -40,6 +40,7 @@ class Mock {
   }
 
   withArgs(...args) {
+    for (let i in args) args[i] = args[i] instanceof ArgValidator ? args[i] : Args.isEq(args[i]);
     this.functions[this.functions.length-1].args = args;
     return this;
   }
@@ -83,9 +84,18 @@ class Mock {
         //check that this function is called in the sequence it was created. This will be equivalent to it's position in the array.
         isEqual(target.callSequence, Number.parseInt(i), `Expected function ${functionMeta.name} with arguments ${JSON.stringify(functionMeta.args)} to be called in sequence ${i} but was ${target.callSequence}`);
 
-        //the arguments should be equal to the expected arguments
-        isEqual(args, functionMeta.args, `Expected the arguments to ${functionMeta.name} to be ${JSON.stringify(functionMeta.args)} but was ${JSON.stringify(args)}`)
-
+        //validate the arguments
+        if (args == undefined && functionMeta.args == undefined) {
+          //valid
+        } else if (functionMeta.args && functionMeta.args.length > 0 && functionMeta.args[0] === Args.IGNORE_ALL) {
+          //igore
+        } else if ((args && functionMeta.args == undefined) || (args && functionMeta.args == undefined)) {
+          throw new Error(`Expected function ${functionMeta.name} to be called with ${JSON.stringify(functionMeta.args)} but was called with ${JSON.stringify(args)}`);
+        } else {
+          //validate the arguments according to the specified validators
+          for (i in args) functionMeta.args[i].val(args[i], functionMeta.name);
+          isEqual(args.length, functionMeta.args.length, `Expected function ${functionMeta.name} to have arguments ${functionMeta.args.length} but was called with ${JSON.stringify(args)}`);
+        }
         target["callSequence"]++;
         if (functionMeta.error) {
           throw functionMeta.error;
@@ -133,4 +143,16 @@ class Mock {
 
 function newMock() {
   return new Mock();
+}
+
+class ArgValidator {
+  constructor(valFunction) {
+    this.val = valFunction;
+  }
+}
+
+let Args = {
+  "IGNORE_ALL" : new ArgValidator(() => {return true;}),
+  "ANY" : new ArgValidator(() => {return true;}),
+  "isEq" : (expectedArg) => {return new ArgValidator((arg, functionName) => {return isEqual(arg, expectedArg, `Expected argument to ${functionName} to be ${JSON.stringify(expectedArg)} but was ${JSON.stringify(arg)}`);})}
 }
