@@ -87,7 +87,7 @@ class Mock {
         //validate the arguments
         if (args == undefined && functionMeta.args == undefined) {
           //valid
-        } else if (functionMeta.args && functionMeta.args.length > 0 && functionMeta.args[0] === Args.IGNORE_ALL) {
+        } else if (functionMeta.args && functionMeta.args.length > 0 && functionMeta.args[0] === Args.IGNORE) {
           //igore
         } else if ((args && functionMeta.args == undefined) || (args && functionMeta.args == undefined)) {
           throw new Error(`Expected function ${functionMeta.name} to be called with ${JSON.stringify(functionMeta.args)} but was called with ${JSON.stringify(args)}`);
@@ -152,7 +152,10 @@ class ArgValidator {
 }
 
 let Args = {
-  "IGNORE_ALL" : new ArgValidator(() => {return true;}),
+  //If Args.IGNORE is the first argument then all argument validation will be ignored
+  "IGNORE" : new ArgValidator(() => {return true;}),
+  //If the argument is Args.ANY then no validation will be done for this argument
   "ANY" : new ArgValidator(() => {return true;}),
+  //Args.isEq(x) Checks to make sure the argument is equal to x
   "isEq" : (expectedArg) => {return new ArgValidator((arg, functionName) => {return isEqual(arg, expectedArg, `Expected argument to ${functionName} to be ${JSON.stringify(expectedArg)} but was ${JSON.stringify(arg)}`);})}
 }

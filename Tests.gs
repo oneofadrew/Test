@@ -313,7 +313,7 @@ function getSuiteValidators_() {
   let suite = newTestSuite("Validators")
     .addTest(testArgsIsEq_)
     .addTest(testArgsAny_)
-    .addTest(testArgsIgnoreAll_);
+    .addTest(testArgsIgnore_);
   return suite;
 }
 
@@ -366,9 +366,9 @@ function testArgsAny_() {
   willFail(() => {mockedObject.doThing(1, 2)}); //too many calls
 }
 
-function testArgsIgnoreAll_() {
+function testArgsIgnore_() {
   let mock = newMock();
-  mock.expects("doThing").withArgs(Args.IGNORE_ALL).willReturn(true);
+  mock.expects("doThing").withArgs(Args.IGNORE).willReturn(true);
   let mockedObject = mock.build();
   isTrue(mockedObject.doThing());
   mockedObject = mock.build();
