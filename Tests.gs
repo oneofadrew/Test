@@ -1,7 +1,7 @@
 /**
  * Run all the tests for the Test library
  */
-function runTests() {
+function runTests_() {
   suite = newTestSuite("All Tests")
     .addSuite(getSuiteIsEqual_())
     .addSuite(getSuiteIsTrue_())
