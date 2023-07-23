@@ -1,7 +1,7 @@
 /**
  * Run all the tests for the Test library
  */
-function runTests_() {
+function runTests() {
   suite = newTestSuite("All Tests")
     .addSuite(getSuiteIsEqual_())
     .addSuite(getSuiteIsTrue_())
@@ -9,8 +9,7 @@ function runTests_() {
     .addSuite(getSuiteIsTruthy_())
     .addSuite(getSuiteIsFalsy_())
     .addSuite(getSuiteWillFail_())
-    .addSuite(getSuiteMock_())
-    .addSuite(getSuiteValidators_());
+    .addSuite(getSuiteMock_());
   suite.run();
 }
 
@@ -202,6 +201,14 @@ function testWillFailUnhappyPath_() {
 
 function getSuiteMock_() {
   let suite = newTestSuite("Mock")
+    .addSuite(getSuiteExpectations_())
+    .addSuite(getSuiteValidators_())
+    .addSuite(getSuiteStubs_());
+  return suite;
+}
+
+function getSuiteExpectations_() {
+  let suite = newTestSuite("Expectations")
     .addTest(testMockExpects_)
     .addTest(testMockMultipleExpects_)
     .addTest(testMockWithArgs_)
@@ -378,4 +385,14 @@ function testArgsIgnore_() {
   mockedObject = mock.build();
   isTrue(mockedObject.doThing(1, 2, 3));
   willFail(() => {mockedObject.doThing(1, 2, 3)}); //too many calls
+}
+
+function getSuiteStubs() {
+  let suite = newTestSuite("Stubs")
+    //.addTest(testArgsIsEq_);
+  return suite;
+}
+
+function testStubs() {
+  
 }

@@ -148,7 +148,8 @@ function newMock() {
 }
 
 class ArgValidator {
-  constructor(valFunction) {
+  constructor(valFunction, expected) {
+    this.expected = expected;
     this.val = valFunction;
   }
 }
@@ -159,5 +160,5 @@ let Args = {
   //If the argument is Args.ANY then no validation will be done for this argument
   "ANY" : new ArgValidator(() => {return true;}),
   //Args.isEq(x) Checks to make sure the argument is equal to x
-  "isEq" : (expectedArg) => {return new ArgValidator((arg, functionName) => {return isEqual(arg, expectedArg, `Expected argument to ${functionName} to be ${JSON.stringify(expectedArg)} but was ${JSON.stringify(arg)}`);})}
+  "isEq" : (expectedArg) => {return new ArgValidator((arg, functionName) => {return isEqual(arg, expectedArg, `Expected argument to ${functionName} to be ${JSON.stringify(expectedArg)} but was ${JSON.stringify(arg)}`);}, expectedArg)}
 }
