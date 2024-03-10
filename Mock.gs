@@ -13,21 +13,7 @@ function MockFunction_(name) {
 }
 
 /**
- * This is the Mock that mocks out a dependency. You can chain the function expectation calls to allow for very readable code in tests.
- * The generated mock object has both explicit and implicit expectations
- * Explicit:
- *  - Functions will be called with the names that have been provided for the mock. Unmocked functions will not exist and so cause an error
- *  - Functions when called will have their parameters compared against any provided parameters for the mocked function
- * Implicit
- *  - Functions will be called in the sequence they are specified in. If not an error will be thrown.
- *  - It can be checked that all mocked functions have been invoked by calling the verify() function on the generated mock object.
- * 
- * @function expects(name): sets the name of the function to expect and implicitly creates a new MockFunction_ to configure under the hood
- * @function withArgs(...args): sets the arguments the mocked functiuon should expect
- * @function willReturn(returnValue): sets the value that the mocked function will return. Ignored if an error is to be thrown instead.
- * @function willThrow(error): sets the error that will be thrown when the function is called. Any return value will be ignored.
- * @function build(): builds the mockedObject with the mock functions attached.
- * @function verify(): verifies the mockedObject has been completely used up.
+ * The Mock class. Implements all the functionality of a Mock.
  */
 class Mock {
   constructor() {
@@ -40,8 +26,8 @@ class Mock {
   }
 
   withArgs(...args) {
-    for (let i in args) args[i] = args[i] instanceof ArgValidator ? args[i] : Args.isEq(args[i]);
-    this.functions[this.functions.length-1].args = args;
+    const defaultedArgs = args.map(arg => arg instanceof ArgValidator ? arg : Args.isEq(arg))
+    this.functions[this.functions.length-1].args = defaultedArgs;
     return this;
   }
 
@@ -79,17 +65,17 @@ class Mock {
         //because of the wrapping of the function in the target, the args get boxed in an array so we need to unbox here
         args = args[0];
         //if args is an empty array it means nothing has been passed so should be undefined instead
-        args = args.length == 0 ? undefined : args;
+        args = args.length === 0 ? undefined : args;
 
         //check that this function is called in the sequence it was created. This will be equivalent to it's position in the array.
         isEqual(target.callSequence, Number.parseInt(i), `Expected function ${functionMeta.name} with arguments ${JSON.stringify(functionMeta.args)} to be called in sequence ${i} but was ${target.callSequence}`);
 
         //validate the arguments
-        if (args == undefined && functionMeta.args == undefined) {
+        if (args === undefined && functionMeta.args === undefined) {
           //valid
         } else if (functionMeta.args && functionMeta.args.length > 0 && functionMeta.args[0] === Args.IGNORE) {
           //igore
-        } else if ((args && functionMeta.args == undefined) || (args == undefined && functionMeta.args)) {
+        } else if ((args && functionMeta.args === undefined) || (args === undefined && functionMeta.args)) {
           throw new Error(`Expected function ${functionMeta.name} to be called with ${JSON.stringify(functionMeta.args)} but was called with ${JSON.stringify(args)}`);
         } else {
           //validate the arguments according to the specified validators
@@ -143,6 +129,23 @@ class Mock {
   }
 };
 
+/**
+ * Create a Mock that stubs out a dependency. You can chain the function expectation calls to allow for very readable code in tests.
+ * The generated mock object has both explicit and implicit expectations
+ * Explicit:
+ *  - Functions will be called with the names that have been provided for the mock. Unmocked functions will not exist and so cause an error
+ *  - Functions when called will have their parameters compared against any provided parameters for the mocked function
+ * Implicit
+ *  - Functions will be called in the sequence they are specified in. If not an error will be thrown.
+ *  - It can be checked that all mocked functions have been invoked by calling the verify() function on the generated mock object.
+ * 
+ * @function expects(name): sets the name of the function to expect and implicitly creates a new MockFunction_ to configure under the hood
+ * @function withArgs(...args): sets the arguments the mocked functiuon should expect
+ * @function willReturn(returnValue): sets the value that the mocked function will return. Ignored if an error is to be thrown instead.
+ * @function willThrow(error): sets the error that will be thrown when the function is called. Any return value will be ignored.
+ * @function build(): builds the mockedObject with the mock functions attached.
+ * @function verify(): verifies the mockedObject has been completely used up.
+ */
 function newMock() {
   return new Mock();
 }

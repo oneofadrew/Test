@@ -4,7 +4,8 @@
 function isEqual(a, b, msg) {
   aString = JSON.stringify(a);
   bString = JSON.stringify(b);
-  msg = msg ? msg : `Expected ${bString} but was ${aString}`;
+  msg = msg ? `${msg} - e` : "E";
+  msg = `${msg}xpected ${bString} but was ${aString}`;
   return deepEqual_(a, b, msg);
 }
 
@@ -27,20 +28,23 @@ function willFail(test, errMsg, msg) {
     test();
     error = true;
   } catch (e) {
-    if (errMsg && e.message != errMsg) {
-      msg = msg ? msg : `Expected error message ${errMsg} but was ${e.message}.`;
+    if (errMsg && e.message !== errMsg) {
+      msg = msg ? `${msg} - e` : "E";
+      msg = `${msg}xpected error message ${errMsg} but was "${e.message}".`;
       throw new Error(msg);
     }
   }
   if (error) {
-    msg = msg ? msg : `Expected error to be thrown but wasn't.`;
+    msg = msg ? `${msg} - e` : "E";
+    msg = `${msg}xpected error to be thrown but wasn't.`;
     throw new Error(msg);
   }
   return true;
 }
 
 function isTruthy(a, msg) {
-  msg = msg ? msg : `Value ${JSON.stringify(a)} is not truthy`;
+  msg = msg ? `${msg} - v` : "V";
+  msg = `${msg}alue ${JSON.stringify(a)} is not truthy`;
   if (a) {
     return true;
   } else {
@@ -49,7 +53,8 @@ function isTruthy(a, msg) {
 }
 
 function isFalsy(a, msg) {
-  msg = msg ? msg : `Value ${JSON.stringify(a)} is not falsy`;
+  msg = msg ? `${msg} - v` : "V";
+  msg = `${msg}alue ${JSON.stringify(a)} is not falsy`;
   if (a) {
     throw new Error(msg);
   } else {
@@ -58,13 +63,33 @@ function isFalsy(a, msg) {
 }
 
 function isTrue(a, msg) {
-  msg = msg ? msg : `Value ${JSON.stringify(a)} is not true`;
-  return isEqual(a, true, msg);
+  msg = msg ? `${msg} - v` : "V";
+  msg = `${msg}alue ${JSON.stringify(a)} is not true`;
+  if (a === true) {
+    return true;
+  } else {
+    throw new Error(msg);
+  };
 }
 
 function isFalse(a, msg) {
-  msg = msg ? msg : `Value ${JSON.stringify(a)} is not false`;
-  return isEqual(a, false, msg);
+  msg = msg ? `${msg} - v` : "V";
+  msg = `${msg}alue ${JSON.stringify(a)} is not false`;
+  if (a === false) {
+    return true;
+  } else {
+    throw new Error(msg);
+  };
+}
+
+function isEmpty(a, msg) {
+  msg = msg ? `${msg} - v` : "V";
+  msg = `${msg}alue ${JSON.stringify(a)} is not empty`;
+  if (a === null || a === undefined || a === "" || (typeof a === 'object' && Object.keys(a).length === 0)) {
+    return true;
+  } else {
+    throw new Error(msg);
+  };
 }
 
 function newTestSuite(id) {

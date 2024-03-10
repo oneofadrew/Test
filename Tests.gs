@@ -1,13 +1,14 @@
 /**
  * Run all the tests for the Test library
  */
-function runTests_() {
+function runTests() {
   suite = newTestSuite("All Tests")
     .addSuite(getSuiteIsEqual_())
     .addSuite(getSuiteIsTrue_())
     .addSuite(getSuiteIsFalse_())
     .addSuite(getSuiteIsTruthy_())
     .addSuite(getSuiteIsFalsy_())
+    .addSuite(getSuiteIsEmpty_())
     .addSuite(getSuiteWillFail_())
     .addSuite(getSuiteMock_())
     .addSuite(getSuiteValidators_());
@@ -46,6 +47,7 @@ function testIsEqualHappyPath_() {
   isEqual(arr1, arr2);
   isEqual(obj1, obj1);
   isEqual(obj1, obj2);
+  isEqual({}, {});
 }
 
 function testIsEqualUnhappyPath_() {
@@ -145,6 +147,7 @@ function testIsTruthyUnhappyPath_() {
   willFail(() => {isTruthy(null)}, null, "isTruthy() should throw an error on null");
   willFail(() => {isTruthy(0)}, null, "isTruthy() should throw an error on zero");
   willFail(() => {isTruthy("")}, null, "isTruthy() should throw an error on empty string");
+  willFail(() => {isTruthy(undefined)}, null, "isTruthy() should throw an error on undefined");
 }
 
 function getSuiteIsFalsy_() {
@@ -158,12 +161,35 @@ function testIsFalsyHappyPath_() {
   isFalsy(null);
   isFalsy(0);
   isFalsy("");
+  isFalsy(undefined);
 }
 
 function testIsFalsyUnhappyPath_() {
   willFail(() => {isFalsy("0")}, null, "isFalsy() should throw an error on non-empty string");
   willFail(() => {isFalsy(1)}, null, "isFalsy() should throw an error on positive number");
   willFail(() => {isFalsy(-1)}, null, "isFalsy() should throw an error on negative number");
+  willFail(() => {isFalsy({})}, null, "isFalsy() should throw an error on empty object");
+}
+
+function getSuiteIsEmpty_() {
+  let suite = newTestSuite("isEmpty()")
+    .addTest(testIsEmptyHappyPath_)
+    .addTest(testIsEmptyUnhappyPath_);
+  return suite;
+}
+
+function testIsEmptyHappyPath_() {
+  isEmpty(null);
+  isEmpty(undefined);
+  isEmpty("");
+  isEmpty({});
+}
+
+function testIsEmptyUnhappyPath_() {
+  willFail(() => {isEmpty(0)}, null, "isEmpty() should throw an error on zero");
+  willFail(() => {isEmpty("string")}, null, "isEmpty() should throw an error on positive number");
+  willFail(() => {isEmpty(1)}, null, "isEmpty() should throw an error on positive number");
+  willFail(() => {isEmpty(-1)}, null, "isEmpty() should throw an error on negative number");
 }
 
 function getSuiteWillFail_() {
