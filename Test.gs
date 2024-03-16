@@ -42,52 +42,92 @@ function willFail(test, errMsg, msg) {
   return true;
 }
 
+function isLessThan(a, b, msg) {
+  if (a < b) {
+    return true;
+  } else {
+    msg = msg ? `${msg} - v` : "V";
+    msg = `${msg}alue ${a} is not less than value ${b}`;
+    throw new Error(msg);
+  };
+}
+
+function isLessThanOrEqualTo(a, b, msg) {
+  if (a <= b) {
+    return true;
+  } else {
+    msg = msg ? `${msg} - v` : "V";
+    msg = `${msg}alue ${a} is not less than or equal to value ${b}`;
+    throw new Error(msg);
+  };
+}
+
+function isGreaterThan(a, b, msg) {
+  if (a > b) {
+    return true;
+  } else {
+    msg = msg ? `${msg} - v` : "V";
+    msg = `${msg}alue ${a} is not greater than value ${b}`;
+    throw new Error(msg);
+  };
+}
+
+function isGreaterThanOrEqualTo(a, b, msg) {
+  if (a >= b) {
+    return true;
+  } else {
+    msg = msg ? `${msg} - v` : "V";
+    msg = `${msg}alue ${a} is not greater than or equal to value ${b}`;
+    throw new Error(msg);
+  };
+}
+
 function isTruthy(a, msg) {
-  msg = msg ? `${msg} - v` : "V";
-  msg = `${msg}alue ${JSON.stringify(a)} is not truthy`;
   if (a) {
     return true;
   } else {
+    msg = msg ? `${msg} - v` : "V";
+    msg = `${msg}alue ${JSON.stringify(a)} is not truthy`;
     throw new Error(msg);
   };
 }
 
 function isFalsy(a, msg) {
-  msg = msg ? `${msg} - v` : "V";
-  msg = `${msg}alue ${JSON.stringify(a)} is not falsy`;
   if (a) {
     throw new Error(msg);
   } else {
+    msg = msg ? `${msg} - v` : "V";
+    msg = `${msg}alue ${JSON.stringify(a)} is not falsy`;
     return true;
   };
 }
 
 function isTrue(a, msg) {
-  msg = msg ? `${msg} - v` : "V";
-  msg = `${msg}alue ${JSON.stringify(a)} is not true`;
   if (a === true) {
     return true;
   } else {
+    msg = msg ? `${msg} - v` : "V";
+    msg = `${msg}alue ${JSON.stringify(a)} is not true`;
     throw new Error(msg);
   };
 }
 
 function isFalse(a, msg) {
-  msg = msg ? `${msg} - v` : "V";
-  msg = `${msg}alue ${JSON.stringify(a)} is not false`;
   if (a === false) {
     return true;
   } else {
+    msg = msg ? `${msg} - v` : "V";
+    msg = `${msg}alue ${JSON.stringify(a)} is not false`;
     throw new Error(msg);
   };
 }
 
 function isEmpty(a, msg) {
-  msg = msg ? `${msg} - v` : "V";
-  msg = `${msg}alue ${JSON.stringify(a)} is not empty`;
   if (a === null || a === undefined || a === "" || (typeof a === 'object' && Object.keys(a).length === 0)) {
     return true;
   } else {
+    msg = msg ? `${msg} - v` : "V";
+    msg = `${msg}alue ${JSON.stringify(a)} is not empty`;
     throw new Error(msg);
   };
 }

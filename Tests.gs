@@ -6,6 +6,8 @@ function runTests() {
     .addSuite(getSuiteIsEqual_())
     .addSuite(getSuiteIsTrue_())
     .addSuite(getSuiteIsFalse_())
+    .addSuite(getSuiteIsLessThan_())
+    .addSuite(getSuiteIsGreaterThan_())
     .addSuite(getSuiteIsTruthy_())
     .addSuite(getSuiteIsFalsy_())
     .addSuite(getSuiteIsEmpty_())
@@ -125,6 +127,84 @@ function testIsFalseUnhappyPath_() {
   try {
     isFalse(true);
     throw new Error("isFalse() should throw an error on true");
+  } catch {
+    //do nothing
+  }
+}
+
+function getSuiteIsLessThan_() {
+  let suite = newTestSuite("isLessThan()")
+    .addTest(testIsLessThanHappyPath_)
+    .addTest(testIsLessThanUnhappyPath_)
+    .addTest(testIsLessThanOrEqualToHappyPath1_)
+    .addTest(testIsLessThanOrEqualToHappyPath2_)
+    .addTest(testIsLessThanOrEqualToUnhappyPath_)
+  ;
+  return suite;
+}
+
+function testIsLessThanHappyPath_() {
+  isLessThan(1,2);
+}
+
+function testIsLessThanUnhappyPath_() {
+  try {
+    isLessThan(2,1);
+    throw new Error("isLessThan() should throw an error on greater than");
+  } catch {
+    //do nothing
+  }
+}
+
+function testIsLessThanOrEqualToHappyPath1_() {
+  isLessThanOrEqualTo(1,2);
+}
+function testIsLessThanOrEqualToHappyPath2_() {
+  isLessThanOrEqualTo(2,2);
+}
+function testIsLessThanOrEqualToUnhappyPath_() {
+  try {
+    isLessThanOrEqualTo(2,1);
+    throw new Error("isLessThanOrEqualTo() should throw an error on greater than");
+  } catch {
+    //do nothing
+  }
+}
+
+function getSuiteIsGreaterThan_() {
+  let suite = newTestSuite("isGreaterThan()")
+    .addTest(testIsGreaterThanHappyPath_)
+    .addTest(testIsGreaterThanUnhappyPath_)
+    .addTest(testIsGreaterThanOrEqualToHappyPath1_)
+    .addTest(testIsGreaterThanOrEqualToHappyPath2_)
+    .addTest(testIsGreaterThanOrEqualToUnhappyPath_)
+  ;
+  return suite;
+}
+
+function testIsGreaterThanHappyPath_() {
+  isGreaterThan(2,1);
+}
+
+function testIsGreaterThanUnhappyPath_() {
+  try {
+    isGreaterThan(1,2);
+    throw new Error("isGreaterThan() should throw an error on less than");
+  } catch {
+    //do nothing
+  }
+}
+
+function testIsGreaterThanOrEqualToHappyPath1_() {
+  isGreaterThanOrEqualTo(2,1);
+}
+function testIsGreaterThanOrEqualToHappyPath2_() {
+  isGreaterThanOrEqualTo(1,1);
+}
+function testIsGreaterThanOrEqualToUnhappyPath_() {
+  try {
+    isGreaterThanOrEqualTo(1,2);
+    throw new Error("isGreaterThanOrEqualTo() should throw an error on less than");
   } catch {
     //do nothing
   }
