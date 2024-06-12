@@ -1,3 +1,7 @@
+//---------------------------------------------------------------------------------------
+// Copyright ⓒ 2024 Drew Harding
+// All rights reserved.
+//---------------------------------------------------------------------------------------
 /**
  * An internal helper that provides the metadata for a mocked function to the mock
  * @param name: the name of the function that will be called
